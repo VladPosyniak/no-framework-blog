@@ -1,41 +1,38 @@
 <?php
 
-use App\controller\MainController;
+use App\controller\ArticlePageController;
+use App\controller\CreateArticlePageController;
+use App\controller\DeleteArticlePageController;
+use App\controller\MainPageController;
 use DI\ContainerBuilder;
 use FastRoute\RouteCollector;
 use Middlewares\FastRoute;
 use Middlewares\RequestHandler;
 use Relay\Relay;
-use Src\service\MainService;
 use Zend\Diactoros\Response;
-use Zend\Diactoros\ServerRequestFactory;
-
-use function DI\create;
-use function DI\get;
+use Zend\Diactoros\ServerRequest;
 use function FastRoute\simpleDispatcher;
 
+require_once dirname(__DIR__) . '/config/env.php';
 require_once dirname(__DIR__) . '/vendor/autoload.php';
 
-$containerBuilder = new ContainerBuilder();
-$containerBuilder->useAutowiring(false);
-$containerBuilder->useAnnotations(false);
-$containerBuilder->addDefinitions([
-                                      MainService::class => create(MainService::class)->constructor(get('response')),
-                                      MainController::class => create(MainController::class)->constructor(get(MainService::class)),
-                                      'response' => create(Response::class)
-                                  ]);
 
+$containerBuilder = new ContainerBuilder();
+$containerBuilder->useAnnotations(false);
+$containerBuilder->addDefinitions(require CONFIG_PATH . '/definitions.php');
 $container = $containerBuilder->build();
 
-$routes = simpleDispatcher(function (RouteCollector $routeCollector) {
-    $routeCollector->get('/hello', MainController::class);
-});
-
-$middlewareQueue[] = new FastRoute($routes);
+$middlewareQueue[] = new FastRoute(simpleDispatcher(function (RouteCollector $routeCollector) {
+    $routeCollector->get('/', MainPageController::class);
+    $routeCollector->get('/article', ArticlePageController::class);
+    $routeCollector->get('/create-article', CreateArticlePageController::class);
+    $routeCollector->post('/create-article', CreateArticlePageController::class);
+    $routeCollector->get('/delete-article', DeleteArticlePageController::class);
+}));
 $middlewareQueue[] = new RequestHandler($container);
 
 $requestHandler = new Relay($middlewareQueue);
-$response = $requestHandler->handle(ServerRequestFactory::fromGlobals());
+$response = $requestHandler->handle($container->get(ServerRequest::class));
 
 $emitter = new Response\SapiEmitter();
 $emitter->emit($response);

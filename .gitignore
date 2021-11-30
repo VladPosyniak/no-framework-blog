@@ -1,2 +1,4 @@
 .idea
 vendor
+resources/db
+public/templates_c
