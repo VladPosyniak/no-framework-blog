@@ -9,7 +9,7 @@ class ArticleEntity
     private UuidInterface $id;
     private string $title;
     private string $text;
-    private string $authorID;
+    private int $authorID;
     private int $createdTimestamp;
 
     public function __construct(UuidInterface $id, string $title, string $text, string $authorID, string $createdTimestamp)
