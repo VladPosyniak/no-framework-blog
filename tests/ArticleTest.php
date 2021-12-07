@@ -1,6 +1,7 @@
 <?php
 namespace Tests;
 
+use DomainException;
 use PHPUnit\Framework\TestCase;
 use Ramsey\Uuid\Uuid;
 use Src\entity\ArticleEntity;
@@ -20,5 +21,11 @@ class ArticleTest extends TestCase
             'created' => $date], $article->toArray());
     }
 
-    
+    public function testTitleCantBeLonger20Chars()
+    {
+        $this->expectException(DomainException::class);
+        $this->expectExceptionMessage('Title length must be less than 20 chars');
+        new ArticleEntity(Uuid::uuid4(), 'Looooooooooooooooong tirle', 'Text', 1, time());
+    }
+
 }

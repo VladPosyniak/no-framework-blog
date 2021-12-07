@@ -2,11 +2,10 @@
 
 namespace App\controller;
 
+use DomainException;
 use JetBrains\PhpStorm\Pure;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Ramsey\Uuid\Uuid;
-use Src\entity\ArticleEntity;
 use Src\service\ArticleService;
 
 class CreateArticlePageController extends AbstractController
@@ -24,11 +23,13 @@ class CreateArticlePageController extends AbstractController
     {
         if ($this->request->getMethod() === 'POST') {
             $body = $this->request->getParsedBody();
-            $this->articleService->savePost(new ArticleEntity(Uuid::uuid4(), $body['title'], $body['text'], 1, time()));
+            try {
+                $this->articleService->savePost($body['title'], $body['text'], $this->getUserID());
+            } catch (DomainException $domainException) {
+                return $this->render('danger-message', ['message' => $domainException->getMessage()]);
+            }
             return $this->render('success-message', ['message' => 'Article created!']);
         }
-        return $this->render('blog/create-article', [
-            'articles' => $this->articleService->getAllArticles()
-        ]);
+        return $this->render('blog/create-article');
     }
 }

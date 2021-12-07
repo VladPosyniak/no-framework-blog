@@ -15,7 +15,8 @@
         "middlewares/request-handler": "^2.0",
         "guzzlehttp/psr7": "^2.1",
         "smarty/smarty": "^4.0",
-        "ramsey/uuid": "^4.2"
+        "ramsey/uuid": "^4.2",
+        "ext-mbstring": "*"
     },
     "autoload": {
         "psr-4": {

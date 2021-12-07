@@ -3,7 +3,9 @@
 use App\controller\ArticlePageController;
 use App\controller\CreateArticlePageController;
 use App\controller\DeleteArticlePageController;
+use App\controller\LoginUserController;
 use App\controller\MainPageController;
+use App\controller\RegisterUserController;
 use DI\ContainerBuilder;
 use FastRoute\RouteCollector;
 use Middlewares\FastRoute;
@@ -28,8 +30,14 @@ $middlewareQueue[] = new FastRoute(simpleDispatcher(function (RouteCollector $ro
     $routeCollector->get('/create-article', CreateArticlePageController::class);
     $routeCollector->post('/create-article', CreateArticlePageController::class);
     $routeCollector->get('/delete-article', DeleteArticlePageController::class);
+    $routeCollector->get('/registration', RegisterUserController::class);
+    $routeCollector->post('/registration', RegisterUserController::class);
+    $routeCollector->get('/login', LoginUserController::class);
+    $routeCollector->post('/login', LoginUserController::class);
 }));
 $middlewareQueue[] = new RequestHandler($container);
+
+global $container;
 
 $requestHandler = new Relay($middlewareQueue);
 $response = $requestHandler->handle($container->get(ServerRequest::class));

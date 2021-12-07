@@ -27,15 +27,23 @@ abstract class AbstractController
     /**
      * @throws SmartyException
      */
-    protected function render(string $template, array $data, $layout = 'layout'): ResponseInterface
+    protected function render(string $template, array $data = [], $layout = 'layout'): ResponseInterface
     {
         $smarty = new Smarty();
         $smarty->setTemplateDir(VIEWS_PATH . '/');
         $smarty->setCacheDir(RESOURCES_PATH);
         $smarty->assign('data', $data);
         $smarty->assign('template', $template . '.tpl');
+        if ($userID = $this->getUserID()) {
+            $smarty->assign('userID', $userID);
+        }
         $response = $this->response->withHeader('Content-Type', 'text/html');
         $response->getBody()->write($smarty->fetch($layout . '.tpl'));
         return $response;
+    }
+
+    protected function getUserID(): ?string
+    {
+        return $this->request->getCookieParams()['blog_user_id'] ?? null;
     }
 }

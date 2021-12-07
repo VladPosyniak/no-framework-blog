@@ -25,6 +25,15 @@
                         <a class="nav-link active" href="/create-article">Create article</a>
                     </li>
                 </ul>
+                {if isset($userID)}
+                    You are in!
+                {else}
+                    <div>
+                        <a class="btn btn-outline-success" href="/login">Login</a>
+
+                        <a class="btn btn-outline-success" href="/registration">Registration</a>
+                    </div>
+                {/if}
             </div>
         </div>
     </nav>
