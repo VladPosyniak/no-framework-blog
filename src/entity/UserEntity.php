@@ -24,6 +24,10 @@ class UserEntity
         }
     }
 
+    public static function hashPassword(string $password): string {
+        return password_hash($password, PASSWORD_DEFAULT);
+    }
+
     #[ArrayShape(['id' => "string", 'name' => "string", 'email' => "string", 'passwordHash' => 'string', 'createdTimestamp' => 'int'])]
     public function toArray(): array
     {

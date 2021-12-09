@@ -18,7 +18,7 @@ class UserService
 
     public function register(string $name, string $email, string $password): string
     {
-        $userEntity = new UserEntity(Uuid::uuid4(), $name, $email, password_hash($password, PASSWORD_DEFAULT), time());
+        $userEntity = new UserEntity(Uuid::uuid4(), $name, $email, UserEntity::hashPassword($password), time());
 
         $this->userRepository->save($userEntity);
         return $userEntity->getId()->toString();
@@ -27,7 +27,7 @@ class UserService
     public function login(string $email, string $password): string
     {
         $userEntity = $this->userRepository->findByEmail($email);
-        if ($userEntity->passwordHashEqualsTo(password_hash($password, PASSWORD_DEFAULT))) {
+        if ($userEntity->passwordHashEqualsTo(UserEntity::hashPassword($password))) {
             return $userEntity->getId()->toString();
         }
 

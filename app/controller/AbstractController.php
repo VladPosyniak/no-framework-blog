@@ -1,10 +1,13 @@
 <?php
 namespace App\controller;
 
+use Exception;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Smarty;
 use SmartyException;
+use Src\entity\UserEntity;
+use Src\repository\UserRepository;
 
 abstract class AbstractController
 {
@@ -34,16 +37,26 @@ abstract class AbstractController
         $smarty->setCacheDir(RESOURCES_PATH);
         $smarty->assign('data', $data);
         $smarty->assign('template', $template . '.tpl');
-        if ($userID = $this->getUserID()) {
-            $smarty->assign('userID', $userID);
-        }
+        $smarty->assign('user', $this->getUser());
         $response = $this->response->withHeader('Content-Type', 'text/html');
         $response->getBody()->write($smarty->fetch($layout . '.tpl'));
         return $response;
     }
 
-    protected function getUserID(): ?string
+    protected function getUser(): ?UserEntity
     {
-        return $this->request->getCookieParams()['blog_user_id'] ?? null;
+        if (isset($_COOKIE['blog_user_id'])) {
+            /** @var UserRepository $userRepository */
+            $userRepository = $GLOBALS['container']->get(UserRepository::class);
+            try {
+                return $userRepository->findOne($_COOKIE['blog_user_id']);
+            } catch (Exception) {
+                unset($_COOKIE['blog_user_id']);
+                setcookie('blog_user_id', null, -1, '/');
+                return null;
+            }
+        }
+
+        return null;
     }
 }

@@ -25,8 +25,8 @@
                         <a class="nav-link active" href="/create-article">Create article</a>
                     </li>
                 </ul>
-                {if isset($userID)}
-                    You are in!
+                {if isset($user)}
+                    <a class="btn btn-outline-success" href="/logout">Logout</a>
                 {else}
                     <div>
                         <a class="btn btn-outline-success" href="/login">Login</a>

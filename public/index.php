@@ -37,7 +37,7 @@ $middlewareQueue[] = new FastRoute(simpleDispatcher(function (RouteCollector $ro
 }));
 $middlewareQueue[] = new RequestHandler($container);
 
-global $container;
+$GLOBALS['container'] = $container;
 
 $requestHandler = new Relay($middlewareQueue);
 $response = $requestHandler->handle($container->get(ServerRequest::class));
