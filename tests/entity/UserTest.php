@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests;
+namespace Tests\entity;
 
 use DomainException;
 use PHPUnit\Framework\TestCase;
@@ -25,9 +25,9 @@ class UserTest extends TestCase
                                 'createdTimestamp' => strtotime($date)], $user->toArray());
     }
 
-    public function testCreateWithInvalidEmail()
+    public function testCreateWithInvalidEmail(): void
     {
-        $email = 'wronemail';
+        $email = 'wrong_email';
         $this->expectException(DomainException::class);
         $this->expectExceptionMessage('Incorrect email ' . $email);
         $id = Uuid::uuid4();
@@ -37,9 +37,9 @@ class UserTest extends TestCase
         new UserEntity($id, $name, $email, $passwordHash, strtotime($date));
     }
 
-    public function testCreateWithTooLongName()
+    public function testCreateWithTooLongName(): void
     {
-        $name = 'Looooooooooon name';
+        $name = 'Looooooooooong name';
         $this->expectException(DomainException::class);
         $this->expectExceptionMessage('Incorrect name ' . $name);
         $id = Uuid::uuid4();
@@ -49,7 +49,7 @@ class UserTest extends TestCase
     }
 
 
-    public function testCreateWithTooShortName()
+    public function testCreateWithTooShortName(): void
     {
         $name = 's';
         $this->expectException(DomainException::class);

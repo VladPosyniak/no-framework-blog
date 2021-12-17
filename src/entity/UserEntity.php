@@ -45,9 +45,9 @@ class UserEntity
         return $this->passwordHash;
     }
 
-    public function passwordHashEqualsTo(string $passwordHash): bool
+    public function passwordVerify(string $password): bool
     {
-        return $this->passwordHash === $passwordHash;
+        return password_verify($password, $this->passwordHash);
     }
 
     public function getEmail(): string

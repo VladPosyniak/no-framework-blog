@@ -24,7 +24,11 @@ class CreateArticlePageController extends AbstractController
         if ($this->request->getMethod() === 'POST') {
             $body = $this->request->getParsedBody();
             try {
-                $this->articleService->savePost($body['title'], $body['text'], $this->getUserID());
+                $user = $this->getUser();
+                if ($user === null) {
+                    throw new DomainException('You must be logged in');
+                }
+                $this->articleService->savePost($body['title'], $body['text'], $user->getId());
             } catch (DomainException $domainException) {
                 return $this->render('danger-message', ['message' => $domainException->getMessage()]);
             }

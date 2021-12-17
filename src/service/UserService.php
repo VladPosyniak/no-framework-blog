@@ -27,7 +27,7 @@ class UserService
     public function login(string $email, string $password): string
     {
         $userEntity = $this->userRepository->findByEmail($email);
-        if ($userEntity->passwordHashEqualsTo(UserEntity::hashPassword($password))) {
+        if ($userEntity->passwordVerify($password)) {
             return $userEntity->getId()->toString();
         }
 

@@ -13,6 +13,8 @@ class ArticleEntity
     private string $authorID;
     private int $createdTimestamp;
 
+    public const TITLE_MAX_LENGTH = 100;
+
     public function __construct(UuidInterface $id, string $title, string $text, string $authorID, string $createdTimestamp)
     {
         if ($this->validateTitle($title)) {
@@ -40,10 +42,15 @@ class ArticleEntity
         ];
     }
 
+    public function getAuthorId(): string
+    {
+        return $this->authorID;
+    }
+
     private function validateTitle(string $title): bool
     {
-        if (strlen($title) > 20) {
-            throw new DomainException('Title length must be less than 20 chars');
+        if (strlen($title) > self::TITLE_MAX_LENGTH) {
+            throw new DomainException('Title length must be less than ' . self::TITLE_MAX_LENGTH . ' chars');
         }
 
         return true;

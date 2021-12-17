@@ -36,6 +36,7 @@ class LoginUserController extends AbstractController
             }
             return $this->render('success-message', ['message' => 'Welcome!']);
         }
+
         return $this->render('user/login');
     }
 }

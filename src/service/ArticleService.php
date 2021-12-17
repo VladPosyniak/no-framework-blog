@@ -39,9 +39,9 @@ class ArticleService
         $this->articleRepository->save($articleEntity);
     }
 
-    public function getArticle(string $id): array
+    public function getArticle(string $id): ArticleEntity
     {
-        return $this->articleRepository->findOne($id)->toArray();
+        return $this->articleRepository->findOne($id);
     }
 
     public function deleteArticle(string $id): void
